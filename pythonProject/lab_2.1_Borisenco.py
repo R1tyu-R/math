@@ -1,4 +1,5 @@
 import math
+import time
 
 A = [
     [3.738, 0.195, 0.275, 0.136],
@@ -58,6 +59,8 @@ def gaussSeidel():
     n = len(A)
     x = [0] * n
 
+    startTime = time.perf_counter()
+
     for iteration in range(maxIter):
 
         maxDiff = 0
@@ -74,17 +77,30 @@ def gaussSeidel():
                 maxDiff = diff
 
         if maxDiff < eps:
-            return x
+
+            endTime = time.perf_counter()
+            workTime = endTime - startTime
+
+            return x, iteration + 1, workTime
 
     print("Метод Гаусса-Зейделя не сошёлся")
     return None
 
 
 if checkDominateElement():
+
     result = gaussSeidel()
 
     if result:
-        print("x1 =", result[0])
-        print("x2 =", result[1])
-        print("x3 =", result[2])
-        print("x4 =", result[3])
+
+        x, iterations, timeWork = result
+
+        print("\nРезультат:")
+        print("x1 =", x[0])
+        print("x2 =", x[1])
+        print("x3 =", x[2])
+        print("x4 =", x[3])
+
+        print("\nСтатистика работы метода:")
+        print(f"\033[32mКоличество итераций:  {iterations}\033[0m  ")
+        print(f"\033[32mВремя выполнения:{timeWork}секунд\033[0m ")

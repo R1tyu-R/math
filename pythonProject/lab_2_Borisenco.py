@@ -1,4 +1,5 @@
 import math
+import time
 
 A = [
     [3.738, 0.195, 0.275, 0.136],
@@ -10,6 +11,7 @@ A = [
 b = [0.815, 0.191, 0.423, 0.352]
 eps = 1e-6
 maxIter = 1000
+
 
 def checkDominateElement():
 
@@ -34,7 +36,7 @@ def checkDominateElement():
         dominantColumns.add(maxIndex)
 
     if len(dominantColumns) < numOfVariables:
-        print("Доминантные элементы находятся в одинаковых колонках.\n Метод Якоби не сходитяс")
+        print("Доминантные элементы находятся в одинаковых колонках.\n Метод Якоби не сходится")
         return False
 
     print("Проверка на доминирующий элемент пройдена")
@@ -42,6 +44,7 @@ def checkDominateElement():
 
 
 def iterJacobi(i, xOld):
+
     row = A[i]
 
     summ = 0
@@ -53,11 +56,13 @@ def iterJacobi(i, xOld):
 
 
 def jacobi():
-    n = len(A)
 
+    n = len(A)
     xOld = [0] * n
 
-    for x in range(maxIter):
+    startTime = time.perf_counter()
+
+    for iteration in range(maxIter):
 
         xNew = [0] * n
 
@@ -72,17 +77,32 @@ def jacobi():
                 maxDiff = diff
 
         if maxDiff < eps:
-            return xNew
+
+            endTime = time.perf_counter()
+            workTime = endTime - startTime
+
+            return xNew, iteration + 1, workTime
 
         xOld = xNew
 
     print("Метод Якоби не сошёлся")
     return None
 
+
 if checkDominateElement():
+
     result = jacobi()
+
     if result:
-        print("x1 =", result[0])
-        print("x2 =", result[1])
-        print("x3 =", result[2])
-        print("x4 =", result[3])
+
+        x, iterations, timeWork = result
+
+        print("\nРезультат:")
+        print("x1 =", x[0])
+        print("x2 =", x[1])
+        print("x3 =", x[2])
+        print("x4 =", x[3])
+
+        print("\nСтатистика работы метода:")
+        print(f"\033[32mКоличество итераций:  {iterations}\033[0m  ")
+        print(f"\033[32mВремя выполнения:{timeWork}секунд\033[0m ")
